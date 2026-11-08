@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Al Nazirul Mubin | Administrator Server & Jaringan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+
+      /* Dark Terminal Modern Palette */
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-hover: #334155;
+      --ink: #f8fafc;
+      --muted: #94a3b8;
+      --teal: #06b6d4;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --line: #334155;
+      --glass-bg: rgba(30, 41, 59, 0.7);
+      --glass-border: rgba(51, 65, 85, 0.8);
+
+      color-scheme: dark;
+    }
+
+    html {
+      scroll-padding-top: 20px;
+      scroll-behavior: smooth;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: inherit;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+      line-height: 1.65;
+      font-size: 1.05rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+
+    .mono {
+      font-family: "Fira Code", monospace;
+    }
+
+    a {
+      color: var(--teal);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    a:hover {
+      color: #38bdf8;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--teal);
+      outline-offset: 3px;
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Header Section */
+    header.top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0;
+      gap: 1rem;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--line);
+    }
+
+    header.top strong {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    nav {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    nav a:hover {
+      color: var(--teal);
+    }
+
+    /* Status Badge Open for Work */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.4rem 0.9rem;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--emerald);
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      background-color: var(--emerald);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--emerald);
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.4;
+        transform: scale(1.25);
+      }
+    }
+
+    /* Hero Section */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      padding: 3.5rem 0 3rem;
+    }
+
+    .hero-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .profile-img-container {
+      position: relative;
+    }
+
+    .profile-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--teal);
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .profile-img:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 35px rgba(6, 182, 212, 0.5);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+      font-weight: 800;
+      margin: 0.5rem 0 1rem;
+      background: linear-gradient(135deg, #f8fafc 30%, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p.lead {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 38rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .btns {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      transition: all 0.25s ease;
+    }
+
+    .btn.main {
+      background: var(--teal);
+      color: #0f172a;
+      border-color: var(--teal);
+      font-weight: 700;
+    }
+
+    .btn.main:hover {
+      background: #38bdf8;
+      border-color: #38bdf8;
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+    }
+
+    .btn:hover {
+      background: var(--surface-hover);
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    /* Quick Stats Bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      background: var(--glass-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0 3rem;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--teal);
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Diagram Section */
+    .diagram {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1.25rem;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+    }
+
+    .diagram svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .diagram text {
+      font-family: "Fira Code", monospace;
+      fill: var(--ink);
+    }
+
+    .node {
+      fill: var(--bg);
+      stroke: var(--teal);
+      stroke-width: 2;
+    }
+
+    .wire {
+      stroke: var(--line);
+      stroke-width: 3;
+      fill: none;
+    }
+
+    .pkt {
+      fill: var(--amber);
+    }
+
+    .pkt.a {
+      animation: flow 2.4s linear infinite;
+    }
+
+    .pkt.b {
+      animation: flow 2.4s linear infinite;
+      animation-delay: -1.2s;
+    }
+
+    .pkt.c {
+      animation: down 3s linear infinite;
+    }
+
+    @keyframes flow {
+      from {
+        transform: translateX(0);
+        opacity: 0;
+      }
+
+      15% {
+        opacity: 1;
+      }
+
+      85% {
+        opacity: 1;
+      }
+
+      to {
+        transform: translateX(150px);
+        opacity: 0;
+      }
+    }
+
+    @keyframes down {
+      from {
+        transform: translateY(0);
+        opacity: 0;
+      }
+
+      15% {
+        opacity: 1;
+      }
+
+      85% {
+        opacity: 1;
+      }
+
+      to {
+        transform: translateY(70px);
+        opacity: 0;
+      }
+    }
+
+    .cap {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.85rem;
+      text-align: center;
+    }
+
+    /* Section styling */
+    section {
+      padding: 4rem 0;
+      border-top: 1px solid var(--line);
+    }
+
+    section>.wrap>h2 {
+      font-size: clamp(1.8rem, 3.5vw, 2.2rem);
+      margin-bottom: 2rem;
+    }
+
+    /* Featured & Project Cards */
+    .featured {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 2rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--teal);
+      border-radius: 12px;
+      padding: 2rem;
+    }
+
+    .featured h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .featured ul {
+      margin: 0;
+      padding-left: 1.2rem;
+      color: var(--muted);
+    }
+
+    .featured li {
+      margin-bottom: 0.5rem;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .tag {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.7rem;
+      border: 1px solid var(--line);
+      border-radius: 99px;
+      color: var(--teal);
+      background: rgba(6, 182, 212, 0.1);
+      font-weight: 500;
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .projects article {
+      padding: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+    }
+
+    .projects article:hover {
+      transform: translateY(-5px);
+      border-color: var(--teal);
+      box-shadow: 0 12px 30px -10px rgba(6, 182, 212, 0.2);
+    }
+
+    .projects h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .projects p {
+      margin: 0 0 1rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .projects .yr {
+      font-size: 0.85rem;
+      color: var(--amber);
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .project-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.25rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .git-link {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--teal);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .git-link:hover {
+      color: #38bdf8;
+      text-decoration: underline;
+    }
+
+    /* Timeline */
+    .timeline {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border-left: 2px solid var(--line);
+    }
+
+    .timeline li {
+      position: relative;
+      padding: 0 0 2.5rem 1.75rem;
+    }
+
+    .timeline li::before {
+      content: "";
+      position: absolute;
+      left: -7px;
+      top: 0.45rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 10px var(--teal);
+    }
+
+    .timeline .when {
+      font-size: 0.875rem;
+      color: var(--amber);
+      font-weight: 700;
+    }
+
+    .timeline h3 {
+      font-size: 1.25rem;
+      margin: 0.2rem 0 0.5rem;
+    }
+
+    .timeline p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 48rem;
+    }
+
+    /* Skills & Education Grid */
+    dl.skills {
+      display: grid;
+      grid-template-columns: minmax(190px, 250px) 1fr;
+      gap: 1.25rem 2rem;
+      margin: 0;
+    }
+
+    dl.skills dt {
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    dl.skills dd {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .two h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .two ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .two li {
+      margin-bottom: 1.25rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .two li:last-child {
+      border-bottom: none;
+    }
+
+    .two strong {
+      display: block;
+      color: var(--ink);
+      font-size: 1.05rem;
+    }
+
+    .two small {
+      display: block;
+      color: var(--muted);
+      margin-top: 0.3rem;
+      font-size: 0.9rem;
+    }
+
+    /* Contact Section */
+    .contact p {
+      max-width: 38rem;
+      color: var(--muted);
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+      font-weight: 500;
+    }
+
+    .contact-info a {
+      color: var(--ink);
+    }
+
+    .contact-info a:hover {
+      color: var(--teal);
+    }
+
+    footer {
+      padding: 2.5rem 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--line);
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+
+      .hero,
+      .featured,
+      .two {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      dl.skills {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+      }
+
+      dl.skills dd {
+        margin-bottom: 1rem;
+      }
+
+      .stats-bar {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .pkt,
+      .status-dot {
+        animation: none;
+      }
+
+      html {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="top">
+      <strong>Al Nazirul Mubin</strong>
+      <nav aria-label="Navigasi utama">
+        <a href="#proyek">Proyek</a>
+        <a href="#pengalaman">Pengalaman</a>
+        <a href="#keahlian">Keahlian & Sertifikat</a>
+        <a href="https://github.com/alnazirul" target="_blank" rel="noopener noreferrer" class="mono">GitHub ↗</a>
+        <a href="#kontak">Kontak</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="hero">
+        <div>
+          <div class="status-badge">
+            <span class="status-dot"></span>
+            <span>Open for Work / Available for Hire</span>
+          </div>
+
+          <div class="hero-header">
+            <div class="profile-img-container">
+              <img class="profile-img" src="profile.jpg" alt="Foto Profil Al Nazirul Mubin"
+                onerror="this.onerror=null;this.src='https://placehold.co/150x150/06b6d4/0f172a?text=ANM';">
+            </div>
+            <div>
+              <span class="mono" style="font-size:0.875rem; color:var(--teal); font-weight:600;">FRESH GRADUATE D-IV
+                TRKJ</span>
+              <h2 style="font-size:1.5rem; font-weight:800; color:var(--ink); margin-top:0.2rem;">Al Nazirul Mubin</h2>
+            </div>
+          </div>
+
+          <h1>Administrasi Server, Basis Data & Infrastruktur Jaringan</h1>
+          <p class="lead">Lulusan D-IV Teknologi Rekayasa Komputer Jaringan, Politeknik Negeri Lhokseumawe (IPK 3,74).
+            Berfokus pada administrasi server Linux, MySQL/MariaDB, jaringan MikroTik, cloud computing, serta
+            pengembangan aplikasi Web/Mobile (Laravel & Flutter).</p>
+
+          <div class="btns">
+            <a class="btn main" href="#proyek">Lihat Proyek</a>
+            <a class="btn" href="https://github.com/alnazirul" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+            <a class="btn" href="https://www.linkedin.com/in/al-nazirul-mubin-126386137/" target="_blank"
+              rel="noopener noreferrer">LinkedIn ↗</a>
+            <a class="btn" href="https://wa.me/6285117733040" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>
+          </div>
+        </div>
+
+        <figure class="diagram" style="margin:0">
+          <svg viewBox="0 0 400 260" role="img" aria-labelledby="dt">
+            <title id="dt">Diagram replikasi master-slave MariaDB dengan backup terjadwal dari slave</title>
+            <rect class="node" x="20" y="30" width="110" height="64" rx="8" />
+            <text x="75" y="58" text-anchor="middle" font-weight="600" font-size="14">Master DB</text>
+            <text x="75" y="78" text-anchor="middle" font-size="11" fill="#94a3b8">Rumah Sakit</text>
+            <rect class="node" x="270" y="30" width="110" height="64" rx="8" />
+            <text x="325" y="58" text-anchor="middle" font-weight="600" font-size="14">Slave DB</text>
+            <text x="325" y="78" text-anchor="middle" font-size="11" fill="#94a3b8">Replika Data</text>
+            <path class="wire" d="M130 62 H270" />
+            <circle class="pkt a" cx="140" cy="62" r="5" />
+            <circle class="pkt b" cx="140" cy="62" r="5" />
+            <text x="200" y="50" text-anchor="middle" font-size="11" fill="#06b6d4">binlog</text>
+            <path class="wire" d="M325 94 V180" />
+            <circle class="pkt c" cx="325" cy="102" r="5" />
+            <text x="338" y="140" font-size="11" fill="#f59e0b">cron</text>
+            <rect class="node" x="250" y="180" width="140" height="56" rx="8" />
+            <text x="320" y="205" text-anchor="middle" font-weight="600" font-size="13">Backup</text>
+            <text x="320" y="222" text-anchor="middle" font-size="11" fill="#94a3b8">MariaDB Backup</text>
+            <text x="20" y="165" font-size="12" fill="#94a3b8">Backup terisolasi di Slave,</text>
+            <text x="20" y="185" font-size="12" fill="#94a3b8">kinerja Master tetap terjaga.</text>
+          </svg>
+          <figcaption class="cap mono">Arsitektur Replikasi & Backup MariaDB Otomatis (Skripsi 2026)</figcaption>
+        </figure>
+      </div>
+
+      <!-- Quick Stats Bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-value mono">3.74 / 4.00</span>
+          <span class="stat-label">IPK D-IV TRKJ Politeknik Negeri Lhokseumawe</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value mono">3+</span>
+          <span class="stat-label">Sertifikasi Nasional & Cloud (BNSP, VSGA, AWS)</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value mono">6+</span>
+          <span class="stat-label">Proyek Infrastruktur, Server & Sistem AI</span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <section id="proyek">
+    <div class="wrap">
+      <h2>Proyek Portofolio</h2>
+      <article class="featured">
+        <div>
+          <h3>Perancangan Sistem Backup Data Otomatis untuk Jaringan Hybrid</h3>
+          <p>Skripsi D-IV TRKJ: Mengimplementasikan replikasi master-slave MariaDB di VPS Linux untuk sistem rumah
+            sakit, dilengkapi pembackupan otomatis terisolasi agar kinerja master tetap optimal.</p>
+          <div class="tags mono">
+            <span class="tag">MariaDB Replikasi</span>
+            <span class="tag">MariaDB Backup</span>
+            <span class="tag">Cron Job</span>
+            <span class="tag">VPS Linux</span>
+            <span class="tag">Hybrid Network</span>
+          </div>
+        </div>
+        <div>
+          <ul>
+            <li>Konfigurasi Master-Slave replication pada MariaDB di lingkungan VPS Linux.</li>
+            <li>Otomatisasi pembackupan data rutin dari server Slave menggunakan MariaDB Backup dan cron.</li>
+            <li>Pengujian dan analisis performa sistem pada jaringan hybrid.</li>
+          </ul>
+          <div style="margin-top:1.5rem;">
+            <a class="git-link mono" href="https://github.com/alnazirul/project-skripsi" target="_blank"
+              rel="noopener noreferrer">Lihat
+              di GitHub ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <div class="projects">
+        <article>
+          <div>
+            <div class="yr mono">2026</div>
+            <h3>Integrasi API Media Berbasis Laravel</h3>
+            <p>Menghubungkan RESTful API YouTube ke aplikasi Laravel untuk optimasi fetching data, serta deployment
+              mandiri di cloud.</p>
+          </div>
+          <div>
+            <div class="tags mono"><span class="tag">Laravel</span><span class="tag">REST API</span><span
+                class="tag">Cloud Deployment</span></div>
+            <div class="project-footer">
+              <a class="git-link mono" href="https://github.com/alnazirul/music-sync" target="_blank"
+                rel="noopener noreferrer">Lihat di GitHub ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article>
+          <div>
+            <div class="yr mono">2025 – 2026</div>
+            <h3>Instalasi Jaringan Lokal (LAN) Gedung Universitas</h3>
+            <p>Merancang dan mengonfigurasi jaringan LAN berbasis MikroTik di Universitas Bumi Persada: router,
+              subnetting, dan aturan kontrol akses.</p>
+          </div>
+          <div>
+            <div class="tags mono"><span class="tag">MikroTik</span><span class="tag">WinBox</span><span class="tag">LAN
+                Routing</span></div>
+          </div>
+        </article>
+
+        <article>
+          <div>
+            <div class="yr mono">2025 – 2026</div>
+            <h3>Sistem AI Deteksi Kecurangan Ujian</h3>
+            <p>Berkontribusi dalam tim pengembang aplikasi pengawasan berbasis AI untuk mendeteksi kecurangan saat ujian
+              secara real-time.</p>
+          </div>
+          <div>
+            <div class="tags mono"><span class="tag">Artificial Intelligence</span><span class="tag">Computer
+                Vision</span></div>
+          </div>
+        </article>
+
+        <article>
+          <div>
+            <div class="yr mono">2025 – 2026</div>
+            <h3>Deteksi Dini Retinopati Diabetik</h3>
+            <p>Mengembangkan model AI terapan untuk menganalisis dan mendeteksi kondisi retinopati diabetik secara dini
+              dari citra retina.</p>
+          </div>
+          <div>
+            <div class="tags mono"><span class="tag">AI Medis</span><span class="tag">Image Processing</span></div>
+          </div>
+        </article>
+
+        <article>
+          <div>
+            <div class="yr mono">2024</div>
+            <h3>IoT Monitoring & Kontrol Suhu Rumah Maggot</h3>
+            <p>Sistem otomatisasi berbasis sensor untuk memantau dan mengontrol suhu lingkungan di rumah maggot demi
+              optimasi budidaya.</p>
+          </div>
+          <div>
+            <div class="tags mono"><span class="tag">IoT</span><span class="tag">Sensors</span><span
+                class="tag">Automation</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="pengalaman">
+    <div class="wrap">
+      <h2>Pengalaman Kerja & Magang</h2>
+      <ol class="timeline">
+        <li>
+          <div class="when mono">2025</div>
+          <h3>Staf UPT Sistem Informasi (Magang) — Universitas Bumi Persada</h3>
+          <p>Memelihara infrastruktur server dan laboratorium komputer, serta membantu perbaikan kesalahan sistem.
+            Menginstal dan mengonfigurasi platform cloud Nextcloud melalui aaPanel di <code>simpan.unbp.ac.id</code>,
+            lengkap dengan enkripsi SSL dan pengelolaan pengguna.</p>
+        </li>
+        <li>
+          <div class="when mono">2021</div>
+          <h3>Praktik Kerja Industri (Prakerin) — PT Telekomunikasi Indonesia (Telkom) Pusat Lhokseumawe</h3>
+          <p>Mendampingi teknisi menangani gangguan jaringan WiFi pelanggan, mendata ONT bermasalah di gudang, serta
+            mendampingi inspeksi teknis ke ruang server IndiHome dan survei tower BTS.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="keahlian">
+    <div class="wrap">
+      <h2>Keahlian & Sertifikasi</h2>
+      <dl class="skills">
+        <dt>Server & Sistem Operasi</dt>
+        <dd>Linux (administrasi VPS), aaPanel, penjadwalan cron job, deployment mandiri</dd>
+        <dt>Basis Data</dt>
+        <dd>MySQL / MariaDB (replikasi master-slave, MariaDB Backup)</dd>
+        <dt>Jaringan</dt>
+        <dd>MikroTik, WinBox, Cisco Packet Tracer, LAN Routing</dd>
+        <dt>Cloud & Tools</dt>
+        <dd>Dasar AWS, Nextcloud, Docker, Git / GitHub</dd>
+        <dt>Pengembangan</dt>
+        <dd>Laravel (PHP), Flutter / Dart</dd>
+        <dt>Bahasa & Soft Skills</dt>
+        <dd>Bahasa Indonesia, Bahasa Inggris (menengah), MS Office, Kerja Sama Tim, Manajemen Waktu</dd>
+      </dl>
+
+      <div class="two" style="margin-top:3.5rem">
+        <div>
+          <h3>Pendidikan</h3>
+          <ul>
+            <li>
+              <strong>Politeknik Negeri Lhokseumawe</strong>
+              <small>D-IV Teknologi Rekayasa Komputer Jaringan (2022 – 2026)</small>
+              <small class="mono" style="color:var(--teal);"><strong>IPK: 3.74 / 4.00</strong></small>
+            </li>
+            <li>
+              <strong>SMK Negeri 1 Lhokseumawe</strong>
+              <small>Teknik Komputer dan Jaringan (2019 – 2022)</small>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3>Sertifikat Kompetensi & Pelatihan</h3>
+          <ul>
+            <li>
+              <strong>Sertifikasi Kompetensi Network Administrator Muda</strong>
+              <small>BNSP / LSP Teknologi Digital (Agustus 2025 – Agustus 2028)</small>
+              <small class="mono" style="color:var(--emerald);">No. Reg. TIK 1565 36006 2025</small>
+            </li>
+            <li>
+              <strong>Pelatihan Junior Network Administrator (VSGA DTS 2025)</strong>
+              <small>Komdigi — BBPSDMP Medan (Juli 2025 | 24 JP)</small>
+              <small class="mono">No: 193106701040-12/VSGA/BLSDM.Komdigi/2025</small>
+            </li>
+            <li>
+              <strong>Cloud Practitioner Essentials (AWS Cloud)</strong>
+              <small>Dicoding Academy (Juni 2024 – Juni 2027)</small>
+              <small class="mono"><a href="https://www.dicoding.com/certificates/MRZMYV9GKZYQ" target="_blank"
+                  rel="noopener noreferrer">Credential ID: MRZMYV9GKZYQ ↗</a></small>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="kontak" class="contact">
+    <div class="wrap">
+      <h2>Hubungi Saya</h2>
+      <p>Terbuka untuk kesempatan karir penuh waktu maupun proyek profesional di bidang <strong>Administrator Server,
+          Administrasi Basis Data, Network Engineer, DevOps, atau App Developer</strong>.</p>
+
+      <div class="contact-info mono">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#10b981">
+            <path
+              d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.205 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+          </svg>
+          WhatsApp: <a href="https://wa.me/6285117733040" target="_blank" rel="noopener noreferrer">+62 851-1773-3040
+            ↗</a>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+          Email: <a href="mailto:alnazirul.work@gmail.com">alnazirul.work@gmail.com</a>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#f8fafc">
+            <path
+              d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+          </svg>
+          GitHub: <a href="https://github.com/alnazirul" target="_blank" rel="noopener noreferrer">alnazirul
+            ↗</a>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#38bdf8">
+            <path
+              d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+          </svg>
+          LinkedIn: <a href="https://www.linkedin.com/in/al-nazirul-mubin-126386137/" target="_blank"
+            rel="noopener noreferrer">Al Nazirul Mubin ↗</a>
+        </div>
+      </div>
+
+      <div class="btns" style="margin-top:1.5rem;">
+        <a class="btn main" href="mailto:alnazirul.work@gmail.com">Kirim Email</a>
+        <a class="btn" href="https://wa.me/6285117733040" target="_blank" rel="noopener noreferrer">Chat WhatsApp ↗</a>
+        <a class="btn" href="https://github.com/alnazirul" target="_blank" rel="noopener noreferrer">Profil GitHub ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap mono">
+      © 2026 Al Nazirul Mubin — System & Network Administrator.
+    </div>
+  </footer>
+</body>
+
+</html>
